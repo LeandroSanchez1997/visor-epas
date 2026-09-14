@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "cable_elec",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Tapada": 0.8, "Material": "doble aislación y vaina de PVC reforzada", "Observac.": "Cable 4x16mm²", "Utilidad": "Alimentacion bomba" }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ -68.011828359480319, -38.982390518019621 ], [ -68.011882442746682, -38.982286816685267 ], [ -68.011961764870662, -38.982121454783837 ], [ -68.011968975972877, -38.981992528287655 ], [ -68.011932920461931, -38.981916853930564 ], [ -68.012152859078498, -38.981785124301169 ], [ -68.01229347557107, -38.981709449722395 ], [ -68.012473753125619, -38.981605747390475 ] ] ] } }
+]
+}
