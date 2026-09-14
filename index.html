@@ -72,9 +72,11 @@
         
         var osmBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { 
             maxZoom: 19, attribution: 'Tiles © Esri' 
-        }).addTo(map);
+        }); // Le sacamos el .addTo(map)
         
-        var googleSat = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', { maxZoom: 20 });
+        var googleSat = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', { 
+            maxZoom: 20 
+        }).addTo(map); // Y se lo ponemos a Google Satélite
         
         // =========================================================================
         // CARGA ESTÁTICA DEL ORTOMOSAICO (Desvinculado de GeoServer)
