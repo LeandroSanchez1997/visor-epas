@@ -133,12 +133,57 @@
         cargarCapaGeoJSON('red_agua.geojson', '#0078FF', 'Red de Agua Potable');
         cargarCapaGeoJSON('cable_elec.geojson', '#FF8C00', 'Cable Subterráneo');
 
-        // Herramientas y Controles
-        L.control.polylineMeasure({ position: 'topleft', unit: 'metres', showBearings: true }).addTo(map);
-        L.control.browserPrint({ position: 'topleft' }).addTo(map); 
-        L.control.locate({ position: 'topleft', strings: { title: "Mostrar mi ubicación real" } }).addTo(map);
-        L.Control.geocoder({ defaultMarkGeocode: true, position: 'topleft' }).addTo(map);
-        map.pm.addControls({ position: 'topleft', drawCircleMarker: false, drawCircle: false, drawText: false });
+       // =========================================================================
+        // HERRAMIENTAS Y CONTROLES (geoman buscar traduct al Español el lunes)
+        // =========================================================================
+        
+        // 1. Regla de medición
+        L.control.polylineMeasure({ 
+            position: 'topleft', 
+            unit: 'metres', 
+            showBearings: true,
+            measureControlTitleOn: "Activar regla para medir distancias",
+            measureControlTitleOff: "Desactivar regla",
+            clearControlTitle: "Limpiar todas las mediciones",
+            tooltipTextFinish: "Haz clic para <b>finalizar</b>",
+            tooltipTextDelete: "Presiona SHIFT y clic para <b>borrar</b> punto",
+            tooltipTextMove: "Haz clic y arrastra para <b>mover</b> punto",
+            tooltipTextResume: "Presiona CTRL y clic para <b>continuar</b> línea",
+            tooltipTextAdd: "Presiona CTRL y clic para <b>agregar</b> punto"
+        }).addTo(map);
+
+        // 2. Impresora
+        L.control.browserPrint({ 
+            position: 'topleft',
+            title: 'Imprimir mapa en papel o PDF'
+        }).addTo(map); 
+
+        // 3. Geolocalización (GPS)
+        L.control.locate({ 
+            position: 'topleft', 
+            strings: { 
+                title: "Mostrar mi ubicación actual",
+                popup: "Estás a {distance} {unit} de este punto",
+                outsideMapBoundsMsg: "Te encuentras fuera de los límites del mapa"
+            } 
+        }).addTo(map);
+
+        // 4. Buscador de direcciones
+        L.Control.geocoder({ 
+            defaultMarkGeocode: true, 
+            position: 'topleft',
+            placeholder: "Buscar calle, barrio o lugar...",
+            errorMessage: "No se encontró el lugar."
+        }).addTo(map);
+
+        // 5. Herramientas de Dibujo (Geoman)
+        map.pm.setLang('es'); // traduce al español
+        map.pm.addControls({ 
+            position: 'topleft', 
+            drawCircleMarker: false, 
+            drawCircle: false, 
+            drawText: false 
+        });
 
         var coordControl = L.control({ position: 'bottomleft' });
         coordControl.onAdd = function() {
@@ -154,6 +199,25 @@
 
         var osmMiniMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { minZoom: 0, maxZoom: 13 });
         new L.Control.MiniMap(osmMiniMap, { toggleDisplay: true, position: 'bottomright' }).addTo(map);
+
+        // COORDENADAS AL PONER UN MARCADOR (PINCHE)
+        // =========================================================================
+        map.on('pm:create', function(e) {
+            // Detectamos si lo que se dibujó fue un pinche (Marker)
+            if (e.shape === 'Marker') {
+                var lat = e.layer.getLatLng().lat;
+                var lng = e.layer.getLatLng().lng;
+                
+                // Armamos el globito con la precisión solicitada
+                var popupCoordenadas = "<div style='text-align: center;'>" +
+                                       "<h3 style='margin: 0 0 5px 0; color: #004b87;'>Coordenada</h3>" +
+                                       "<b>Lat:</b> " + lat.toFixed(6) + "<br>" +
+                                       "<b>Lng:</b> " + lng.toFixed(6) +
+                                       "</div>";
+                                       
+                e.layer.bindPopup(popupCoordenadas).openPopup();
+            }
+        });
     </script>
 </body>
 </html>
