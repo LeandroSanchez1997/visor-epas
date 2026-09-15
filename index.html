@@ -152,17 +152,10 @@
             tooltipTextAdd: "Presiona CTRL y clic para <b>agregar</b> punto"
         }).addTo(map);
 
-        // 2. Impresora
-        // 2. Impresora
+       // 2. Impresora
         L.control.browserPrint({ 
             position: 'topleft',
-            title: 'Imprimir mapa en papel o PDF',
-            printModes: [
-                L.control.browserPrint.mode.portrait("Vertical"),
-                L.control.browserPrint.mode.landscape("Horizontal"),
-                L.control.browserPrint.mode.auto("Automático"),
-                L.control.browserPrint.mode.custom("Personalizado")
-            ]
+            title: 'Imprimir mapa en papel o PDF'
         }).addTo(map);
 
         // 3. Geolocalización (GPS)
