@@ -200,7 +200,7 @@
         var osmMiniMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { minZoom: 0, maxZoom: 13 });
         new L.Control.MiniMap(osmMiniMap, { toggleDisplay: true, position: 'bottomright' }).addTo(map);
 
-        // COORDENADAS AL PONER UN MARCADOR (PINCHE)
+        // COORDENADAS AL PONER UN MARCADOR Y QUE TENGA UN DIALOGO DE RESGUARDO DE SITIO.
         // =========================================================================
         map.on('pm:create', function(e) {
             // Detectamos si lo que se dibujó fue un pinche (Marker)
@@ -208,14 +208,43 @@
                 var lat = e.layer.getLatLng().lat;
                 var lng = e.layer.getLatLng().lng;
                 
-                // Armamos el globito con la precisión solicitada
+                // 1. Pedimos el nombre del punto mediante una ventanita
+                var nombrePunto = prompt("Ingrese un nombre para identificar este punto:", "Nuevo Punto");
+                
+                // Si el usuario cancela o lo deja vacío, le ponemos algo por defecto
+                if (!nombrePunto) {
+                    nombrePunto = "Punto sin nombre";
+                }
+
+                // 2. Creamos la etiqueta permanente (visible siempre)
+                e.layer.bindTooltip(
+                    "<b style='color: #333; text-shadow: 1px 1px 2px white;'>" + nombrePunto + "</b>", 
+                    { 
+                        permanent: true,     // Queda siempre visible
+                        direction: 'top',    // Arriba del pinche
+                        offset: [0, -35],    // Lo desplazamos para que no tape el icono
+                        className: 'etiqueta-punto' 
+                    }
+                );
+                
+                // 3. Armamos el globito de coordenadas
                 var popupCoordenadas = "<div style='text-align: center;'>" +
                                        "<h3 style='margin: 0 0 5px 0; color: #004b87;'>Coordenada</h3>" +
                                        "<b>Lat:</b> " + lat.toFixed(6) + "<br>" +
                                        "<b>Lng:</b> " + lng.toFixed(6) +
                                        "</div>";
                                        
-                e.layer.bindPopup(popupCoordenadas).openPopup();
+                // Vinculamos el globito (lo desplazamos un poco para que no se pise con la etiqueta)
+                e.layer.bindPopup(popupCoordenadas, { offset: [0, -10] });
+
+                // 4. Lógica para que aparezca/desaparezca la coordenada al pasar el mouse
+                e.layer.on('mouseover', function () {
+                    this.openPopup();
+                });
+                
+                e.layer.on('mouseout', function () {
+                    this.closePopup();
+                });
             }
         });
     </script>
